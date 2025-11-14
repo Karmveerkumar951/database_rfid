@@ -1,0 +1,38 @@
+[
+  {
+    "SKU": "P-1001",
+    "Name": "Blue Denim Jacket",
+    "RFID": "30-39-5D-FA-83-20-B4-01-52-E2-A8-D3",
+    "EPC": "30-39-5D-FA-83-20-B4-01-52-E2-A8-D3",
+    "DZone": "Zone A",
+    "Status": "unsold",
+    "Image": "/assets/products/P-1001.jpg"
+  },
+  {
+    "SKU": "P-1003",
+    "Name": "White Sneakers",
+    "RFID": "35-4C-4B-40-00-42-CF-D0-7E-97-14-18",
+    "EPC": "35-4C-4B-40-00-42-CF-D0-7E-97-14-18",
+    "DZone": "087C002B",
+    "Status": "sold",
+    "Image": "/assets/products/P-1003.jpg"
+  },
+  {
+    "SKU": "P-1009",
+    "Name": "Silk Saree",
+    "RFID": "087C002D",
+    "EPC": "35-4C-4B-40-00-2A-23-00-47-86-EA-75",
+    "DZone": "Zone B",
+    "Status": "sold",
+    "Image": "/assets/products/P-1009.jpg"
+  },
+  {
+    "SKU": "P-1012",
+    "Name": "Woolen Sweater",
+    "RFID": "087C002E",
+    "EPC": "35-4C-4B-40-00-49-1E-A0-47-87-57-51",
+    "DZone": "Zone C",
+    "Status": "unsold",
+    "Image": "/assets/products/P-1012.jpg"
+  }
+]
