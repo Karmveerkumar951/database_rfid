@@ -1,98 +1,98 @@
 [
   {
     "SKU": "P-1001",
-    "Name": "Blue Denim Jacket",
+    "NAME": "Blue Denim Jacket",
     "EPC": "30-39-5D-FA-83-20-B4-01-52-E2-A8-D3",
     "DEV": "087C002E",
-    "Status": "unsold",
-    "Image": "/assets/products/P-1001.jpg"
+    "STATUS": "unsold",
+    "IMAGE": "/assets/products/P-1001.jpg"
   },
   {
     "SKU": "P-1002",
-    "Name": "Red Cotton Shirt",
+    "NAME": "Red Cotton Shirt",
     "EPC": "35-4C-4B-40-00-42-CF-D0-7E-97-14-18",
     "DEV": "087C002E",
-    "Status": "sold",
-    "Image": "/assets/products/P-1002.jpg"
+    "STATUS": "sold",
+    "IMAGE": "/assets/products/P-1002.jpg"
   },
   {
     "SKU": "P-1003",
-    "Name": "White Sneakers",
+    "NAME": "White Sneakers",
     "EPC": "04-18-2A-39",
     "DEV": "087C002D",
-    "Status": "sold",
-    "Image": "/assets/products/P-1003.jpg"
+    "STATUS": "sold",
+    "IMAGE": "/assets/products/P-1003.jpg"
   },
   {
     "SKU": "P-1004",
-    "Name": "Black Formal Pants",
+    "NAME": "Black Formal Pants",
     "EPC": "35-4C-4B-40-00-2A-23-00-47-86-EA-75",
     "DEV": "087C002D",
-    "Status": "unsold",
-    "Image": "/assets/products/P-1004.jpg"
+    "STATUS": "unsold",
+    "IMAGE": "/assets/products/P-1004.jpg"
   },
   {
     "SKU": "P-1005",
-    "Name": "Leather Belt",
+    "NAME": "Leather Belt",
     "EPC": "35-4C-4B-40-00-49-1E-A0-47-87-57-51",
     "DEV": "087C002D",
-    "Status": "unsold",
-    "Image": "/assets/products/P-1005.jpg"
+    "STATUS": "unsold",
+    "IMAGE": "/assets/products/P-1005.jpg"
   },
   {
     "SKU": "P-1006",
-    "Name": "Printed Kurta",
+    "NAME": "Printed Kurta",
     "EPC": "30-39-5D-FA-83-20-B4-01-52-E2-A8-D3",
     "DEV": "087C002B",
-    "Status": "unsold",
-    "Image": "/assets/products/P-1006.jpg"
+    "STATUS": "unsold",
+    "IMAGE": "/assets/products/P-1006.jpg"
   },
   {
     "SKU": "P-1007",
-    "Name": "Navy Trousers",
+    "NAME": "Navy Trousers",
     "EPC": "35-4C-4B-40-00-42-CF-D0-7E-97-14-18",
     "DEV": "087C002E",
-    "Status": "unsold",
-    "Image": "/assets/products/P-1007.jpg"
+    "STATUS": "unsold",
+    "IMAGE": "/assets/products/P-1007.jpg"
   },
   {
     "SKU": "P-1008",
-    "Name": "Casual Loafers",
+    "NAME": "Casual Loafers",
     "EPC": "04-18-2A-39",
     "DEV": "087C002B",
-    "Status": "sold",
-    "Image": "/assets/products/P-1008.jpg"
+    "STATUS": "sold",
+    "IMAGE": "/assets/products/P-1008.jpg"
   },
   {
     "SKU": "P-1009",
-    "Name": "Silk Saree",
+    "NAME": "Silk Saree",
     "EPC": "35-4C-4B-40-00-2A-23-00-47-86-EA-75",
     "DEV": "087C002D",
-    "Status": "sold",
-    "Image": "/assets/products/P-1009.jpg"
+    "STATUS": "sold",
+    "IMAGE": "/assets/products/P-1009.jpg"
   },
   {
     "SKU": "P-1010",
-    "Name": "Sports T-Shirt",
+    "NAME": "Sports T-Shirt",
     "EPC": "35-4C-4B-40-00-49-1E-A0-47-87-57-51",
     "DEV": "087C002B",
-    "Status": "unsold",
-    "Image": "/assets/products/P-1010.jpg"
+    "STATUS": "unsold",
+    "IMAGE": "/assets/products/P-1010.jpg"
   },
   {
     "SKU": "P-1011",
-    "Name": "Cotton Shorts",
+    "NAME": "Cotton Shorts",
     "EPC": "30-39-5D-FA-83-20-B4-01-52-E2-A8-D3",
     "DEV": "087C002D",
-    "Status": "unsold",
-    "Image": "/assets/products/P-1011.jpg"
+    "STATUS": "unsold",
+    "IMAGE": "/assets/products/P-1011.jpg"
   },
   {
     "SKU": "P-1012",
-    "Name": "Woolen Sweater",
+    "NAME": "Woolen Sweater",
     "EPC": "35-4C-4B-40-00-42-CF-D0-7E-97-14-18",
     "DEV": "087C002E",
-    "Status": "unsold",
-    "Image": "/assets/products/P-1012.jpg"
+    "STATUS": "unsold",
+    "IMAGE": "/assets/products/P-1012.jpg"
   }
 ]
