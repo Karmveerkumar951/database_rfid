@@ -14,47 +14,105 @@ RFID_PATH = os.path.join(DATABASE_DIR, "rfid.json")
 STAFF_PATH = os.path.join(DATABASE_DIR, "staff.json")
 
 
+# ---------------------------
+# JSON LOADER (safe)
+# ---------------------------
 def load_json(path):
-    """Load JSON from disk. Return [] on error and log the problem."""
     try:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
-    except FileNotFoundError:
-        app.logger.warning("File not found: %s", path)
-        return []
-    except json.JSONDecodeError as e:
-        app.logger.error("JSON decode error in %s: %s", path, e)
-        return []
     except Exception as e:
-        app.logger.exception("Unexpected error loading JSON %s: %s", path, e)
+        app.logger.error(f"Error loading {path}: {e}")
         return []
 
 
+# ---------------------------
+# PRODUCTS ENDPOINT
+# ---------------------------
+@app.route("/products", methods=["GET"])
+def get_products():
+    """
+    Returns canonical products.json as-is.
+    """
+    products = load_json(PRODUCTS_PATH)
+    if isinstance(products, list):
+        return jsonify(products), 200
+    return jsonify([]), 200
+
+
+# ---------------------------
+# STAFF ENDPOINT
+# ---------------------------
+@app.route("/staff", methods=["GET"])
+def get_staff():
+    """
+    Returns clean staff list from staff.json
+    """
+    staff = load_json(STAFF_PATH)
+
+    if isinstance(staff, dict) and isinstance(staff.get("staff"), list):
+        return jsonify(staff["staff"]), 200
+
+    if isinstance(staff, list):
+        return jsonify(staff), 200
+
+    return jsonify([]), 200
+
+
+# ---------------------------
+# CHECK_ALL — CLEAN + MODE 1
+# ---------------------------
 @app.route("/check_all", methods=["GET"])
 def check_all():
     """
-    Existing behavior:
-    - Load products.json and rfid.json
-    - For each tag in rfid.json, look up product by EPC and return a flat object
-      including a boolean ZONE_STATUS (True if tag is where it should be).
+    MODE 1 — Last-read wins
+    Produces clean flattened response:
+    {
+        "DEV_DETECTED": "...",
+        "EPC": "...",
+        "DEV": "...",
+        "IMAGE": "...",
+        "NAME": "...",
+        "SKU": "...",
+        "STATUS": "...",
+        "ZONE_STATUS": true/false
+    }
     """
     products = load_json(PRODUCTS_PATH)
-    rfid = load_json(RFID_PATH)
+    rfid_reads = load_json(RFID_PATH)
 
-    # Fast lookup: EPC -> product
-    product_map = {p.get("EPC"): p for p in products if p.get("EPC")}
+    # ------------------------------------
+    # Build EPC → product lookup table
+    # ------------------------------------
+    product_map = {}
+    for p in products:
+        epc = p.get("EPC") or p.get("epc")
+        if epc:
+            product_map[str(epc).strip()] = p
 
     results = []
 
-    for item in rfid:
-        epc = item.get("EPC")
-        dev_detected = item.get("Dev")  # EXACT key from rfid.json
+    # ------------------------------------
+    # For every RFID read (last-read wins)
+    # ------------------------------------
+    for item in rfid_reads:
+        raw_epc = item.get("EPC") or item.get("epc") or ""
+        epc = str(raw_epc).strip()
+
+        dev_detected = (
+            item.get("Dev")
+            or item.get("DEV")
+            or item.get("dev")
+            or item.get("Device")
+        )
 
         product = product_map.get(epc)
 
-        if product is None:
-            # Tag not found in products.json — return a flat object with unknowns and ZONE_STATUS False
-            flat = {
+        # ------------------------------------
+        # Case 1: EPC not found in product list
+        # ------------------------------------
+        if not product:
+            results.append({
                 "DEV_DETECTED": dev_detected,
                 "EPC": epc,
                 "DEV": None,
@@ -63,63 +121,58 @@ def check_all():
                 "SKU": None,
                 "STATUS": "unknown",
                 "ZONE_STATUS": False
-            }
-            flat.update({k.lower(): v for k, v in flat.items()})
-            results.append(flat)
+            })
             continue
 
-        expected_dev = product.get("DEV")
-        zone_status = (expected_dev == dev_detected)
+        # ------------------------------------
+        # Case 2: Product found → Compare zones
+        # ------------------------------------
+        expected_dev = (
+            product.get("DEV")
+            or product.get("Dev")
+            or product.get("dev")
+            or product.get("defaultZone")
+            or product.get("ZoneName")
+        )
 
-        # Build flat object: copy relevant product fields (use .get to avoid KeyError)
-        flat = {
+        # Normalize both
+        exp_norm = str(expected_dev).strip().lower() if expected_dev else None
+        det_norm = str(dev_detected).strip().lower() if dev_detected else None
+
+        zone_status = (exp_norm == det_norm) if (exp_norm and det_norm) else False
+
+        results.append({
             "DEV_DETECTED": dev_detected,
             "EPC": epc,
-            "DEV": product.get("DEV"),
+            "DEV": expected_dev,
             "IMAGE": product.get("IMAGE"),
             "NAME": product.get("NAME"),
             "SKU": product.get("SKU"),
             "STATUS": product.get("STATUS"),
             "ZONE_STATUS": zone_status
-        }
-
-        # Add lowercase variants for convenience/backwards compatibility
-        flat.update({k.lower(): v for k, v in flat.items()})
-
-        results.append(flat)
+        })
 
     return jsonify(results), 200
 
 
-@app.route("/staff", methods=["GET"])
-def get_staff():
-    """
-    Returns staff data read from database/staff.json.
-    This is the single canonical staff endpoint (no /staff.json fallback).
-    """
-    staff = load_json(STAFF_PATH)
-    # If staff is an object with a `staff` key, return that list
-    if isinstance(staff, dict) and isinstance(staff.get("staff"), list):
-        staff_list = staff["staff"]
-    elif isinstance(staff, list):
-        staff_list = staff
-    else:
-        staff_list = []
-
-    return jsonify(staff_list), 200
-
-
+# ---------------------------
+# HOME ENDPOINT
+# ---------------------------
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({
-        "message": "RFID product locator API running",
-        "endpoints": ["/check_all", "/staff"]
-    })
+        "message": "RFID API running",
+        "endpoints": [
+            "/products",
+            "/staff",
+            "/check_all"
+        ]
+    }), 200
 
 
+# ---------------------------
+# RUN SERVER
+# ---------------------------
 if __name__ == "__main__":
-    print("Using database directory:", DATABASE_DIR)
-    print("Using products:", PRODUCTS_PATH)
-    print("Using rfid:", RFID_PATH)
-    print("Using staff:", STAFF_PATH)
+    print("Using database:", DATABASE_DIR)
     app.run(host="0.0.0.0", port=5000, debug=True)
